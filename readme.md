@@ -41,3 +41,39 @@ Swap:          1535          37        1498
 Note: 
 
 You can replace the url argument `command` as desired, for example, if instead of getting memory usage I wanted to get disk usage, the url would be `command=disk_usage`. The commands are stored in the dictionary `command_whitelist`, just add more options and restart flask to test it out.
+
+## Running from container
+This is useful just for some local testing, to create a docker image, go to the same directory you have placed the file `app.py` and run the commands below.
+
+- Create the Dockerfile:
+```
+cat << EOF > Dockerfile
+FROM python:3.7-alpine
+
+COPY . /app
+WORKDIR /app
+
+RUN pip install flask
+
+CMD ["flask", "run", "--host=0.0.0.0"]
+EOF
+```
+- Still in the same directory, run docker build:
+```
+docker build -t control-container .
+```
+- Once it finishes you can run the container:
+```
+docker run control-container
+```
+If everything is in order you should see something like:
+```
+[controller@ol7-base controller]$ docker run control-container
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+ * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+ * Running on http://172.17.0.2:5000/ (Press CTRL+C to quit)
+```
