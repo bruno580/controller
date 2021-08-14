@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request, make_response
+import whitelist
 import os,subprocess
 
 app = Flask(__name__)
@@ -33,16 +34,11 @@ def _run_command(command):
         output = error
     return output
 
-command_whitelist =  {
-    "disk_usage" : "df -h",
-    "memory_usage" : "free -m",
-    }
-
 @app.post("/command")
 def run_command():
     command = request.args.get('command')
-    if command in command_whitelist.keys():
-        response = make_response(_run_command(command_whitelist[command]))
+    if command in whitelist.commands.keys():
+        response = make_response(_run_command(whitelist.commands[command]))
         return response
     else:
         return jsonify(401, "This command is not whitelisted.")
