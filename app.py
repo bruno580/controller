@@ -11,11 +11,13 @@ def _get_metadata():
         osname   = subprocess.getoutput("source /etc/os-release && echo ${PRETTY_NAME}")
         hostname = subprocess.getoutput("hostname -f")
         kernel   = subprocess.getoutput("uname -r")
+        uptime   = subprocess.getoutput("uptime")
         metadata = [
             {
                 "hostname": hostname, 
                 "kernel": kernel, 
-                "os-release": osname
+                "os-release": osname,
+                "uptime" : uptime
             }    
         ]
         return metadata
